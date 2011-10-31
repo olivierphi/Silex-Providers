@@ -48,8 +48,8 @@ class LessServiceProvider implements ServiceProviderInterface
                 $twigExtension = new \DrBenton\Twig\Extension\LessCompilerExtension ($twigExtensionCompilationClosure);
                 $app['twig']->addExtension($twigExtension);
                 
-                if (isset($app['less.web_files_foler_path'])) {
-                    $twigExtension->setWebFilesFolderPath($app['less.web_files_foler_path']);
+                if (isset($app['less.web_files_folder_path'])) {
+                    $twigExtension->setWebFilesFolderPath($app['less.web_files_folder_path']);
                 }
 
             });
