@@ -21,12 +21,14 @@ The LESS generation uses a small portion of the excellent PHP [Assetic](https://
 - **less.tmp_folder** (optional) : if you don't have access to the system temp folder (as returned by the PHP ```sys_get_temp_dir()``` function), you can provide an alternative temp folder (in this this folder we need to create a temporary Node.js script in order to compile the LESS file ; this script is deleted after use).
 - **less.web_files_folder_path** (optional) : if your public assets are not in the same folder than your 'index.php' file, you can provide the public assets folder path here (it is automatically prepended to the LESS file path in the ```less``` Twig function).
 - **less.compress** (optional) : set it to ```true``` to compress the CSS files after LESS conversion.
+- **less.force_compilation** (optional) : set it to ```true``` to force the LESS-to-CSS compilation for each page load (the standard behaviour is to compile onl if the source LESS file is newer than the target CSS  file).
 
 #### Services
 
 - **less** : The ```DrBenton\Component\LessCompiler``` instance.
 
 Example usage:
+
 ```
 $app['less']->compile('src/Resources/less/main.less', 'web/css/main.css');
 ```
@@ -40,7 +42,8 @@ $app->register(new DrBenton\Silex\Provider\LessServiceProvider(), array(
     'less.node_less_module_path'    => '/home/webmaster/local/node/lib/node_modules/less',
     'less.web_files_folder_path'    =>  __DIR__.'/web',
     'less.tmp_folder'               =>  __DIR__.'/app/cache',
-    'less.compress'                 =>  true,
+    'less.compress'                 =>  !$app['debug'],
+    'less.force_compilation'        =>  $app['debug'],
 ) );
 ```
 

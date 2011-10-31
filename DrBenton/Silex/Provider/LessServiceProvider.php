@@ -25,16 +25,19 @@ class LessServiceProvider implements ServiceProviderInterface
             $compiler->setLogger($app['monolog']);
         }
         if (isset($app['less.compress'])) {
-            $compiler->compress = $app['less.compress'];
+            $compiler->compress = (boolean) $app['less.compress'];
         }
         if (isset($app['less.node_path'])) {
-            $compiler->nodePath = $app['less.node_path'];
+            $compiler->nodePath = (string) $app['less.node_path'];
         }
         if (isset($app['less.node_less_module_path'])) {
-            $compiler->lessModulePath = $app['less.node_less_module_path'];
+            $compiler->lessModulePath = (string) $app['less.node_less_module_path'];
         }
         if (isset($app['less.tmp_folder'])) {
-            $compiler->tmpFolder = $app['less.tmp_folder'];
+            $compiler->tmpFolder = (string) $app['less.tmp_folder'];
+        }
+        if (isset($app['less.force_compilation'])) {
+            $compiler->forceCompilation = (boolean) $app['less.force_compilation'];
         }
 
         if (isset($app['twig'])) {

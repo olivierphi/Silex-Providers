@@ -37,10 +37,17 @@ class LessCompiler
      * @var string|false
      */
     public $tmpFolder = false;
+    /**
+     * If set to 'true', the LESS to CSS compilation will occur even if the last
+     * modification date of the LESS file is the same or older than the CSS last
+     * modification date.
+     * @var boolean
+     */
+    public $forceCompilation = false;
     
     /**
      *
-     * @var type 
+     * @var \Monolog\Logger 
      */
     protected $_logger;
     
@@ -57,19 +64,24 @@ class LessCompiler
             return false;
         }
         
-        $sourceLastM = filemtime($lessFilePath);
-        $targetLastM = (is_file($cssOutputFilePath)) ? filemtime($cssOutputFilePath) : 0 ;
-        
-        if (! is_null($this->_logger) && $this->debug) {
-            $this->_logger->addDebug('Compilation of "'.$lessFilePath.'" (last change : '.$sourceLastM.') to "'.$cssOutputFilePath.'" (last change : '.$targetLastM.')...');
-        }
-        
-        if (is_file($cssOutputFilePath) && $sourceLastM > $targetLastM)
+        if (! $this->forceCompilation)
         {
+            
+            $sourceLastM = filemtime($lessFilePath);
+            $targetLastM = (is_file($cssOutputFilePath)) ? filemtime($cssOutputFilePath) : 0 ;
+
             if (! is_null($this->_logger) && $this->debug) {
-                $this->_logger->addDebug('Compilation skipped.');
+                $this->_logger->addDebug('Compilation of "'.$lessFilePath.'" (last change : '.$sourceLastM.') to "'.$cssOutputFilePath.'" (last change : '.$targetLastM.')...');
             }
-            return false;
+
+            if (is_file($cssOutputFilePath) && $sourceLastM > $targetLastM)
+            {
+                if (! is_null($this->_logger) && $this->debug) {
+                    $this->_logger->addDebug('Compilation skipped.');
+                }
+                return false;
+            }
+            
         }
         
         
@@ -147,7 +159,11 @@ EOF;
     }
     
     
-    public function setLogger ($logger)
+    /**
+     *
+     * @param \Monolog\Logger $logger 
+     */
+    public function setLogger (\Monolog\Logger $logger)
     {
         $this->_logger = $logger;
     }
