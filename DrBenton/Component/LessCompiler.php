@@ -64,6 +64,10 @@ class LessCompiler
             return false;
         }
         
+        if (!file_exists($lessFilePath)) {
+            throw new \Exception('LESS compilation error : file "'.$lessFilePath.'" not found!');
+        }
+        
         if (! $this->forceCompilation)
         {
             
@@ -90,22 +94,27 @@ class LessCompiler
         // @see https://github.com/kriswallsmith/assetic/blob/master/src/Assetic/Filter/LessFilter.php
         
         static $format = <<<'EOF'
-var less = require('%s');
-var sys = require('sys');
+try
+{
+    var less = require('%s');
+    var sys = require('sys');
 
-new(less.Parser)().parse(%s, function(e, tree) {
-    if (e) {
-        less.writeError(e);
-        process.exit(2);
-    }
-
-    try {
-        sys.print(tree.toCSS(%s));
-    } catch (e) {
-        less.writeError(e);
-        process.exit(3);
-    }
-});
+    new(less.Parser)({silent: true}).parse(%s, function(e, tree) {
+        if(e)
+        {
+            throw e;
+        }
+        else
+        {
+            sys.print(tree.toCSS(%s));
+        }
+    });
+}
+catch( e )
+{
+    sys.print('ERROR:'+e.message);
+    process.exit(1);
+}
 EOF;
         
         // tree options
@@ -127,7 +136,7 @@ EOF;
         // Exec string build
         $execStr = escapeshellcmd($this->nodePath).' ';
         $execStr .= escapeshellarg($tmpNodeFilePath).' ';
-        $execStr .= '2>&1';//err output -> std output
+        //$execStr .= '2>&1';//err output -> std output
         
         // Go! Go! Go!
         $cwd = getcwd();
@@ -142,9 +151,9 @@ EOF;
         unlink($tmpNodeFilePath);
 
         // Finish...
-        //if (0 < $code) {
-        //    throw new \RuntimeException($outputCss);
-        //}
+        if (substr($outputCss, 0, 6) === 'ERROR:') {
+            throw new \RuntimeException('LESS compilation error while compiling "'.$lessFilePath.'" :  '.substr($outputCss, 6));
+        }
 
         file_put_contents($cssOutputFilePath, $outputCss);
         $touchResult = touch($cssOutputFilePath, $sourceLastM );
