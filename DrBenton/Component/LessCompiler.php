@@ -156,7 +156,10 @@ EOF;
         }
 
         file_put_contents($cssOutputFilePath, $outputCss);
-        $touchResult = touch($cssOutputFilePath, $sourceLastM );
+        if (isset($sourceLastM))
+        {
+            $touchResult = touch($cssOutputFilePath, $sourceLastM );
+        }
         
         
         if (! is_null($this->_logger) && $this->debug) {
