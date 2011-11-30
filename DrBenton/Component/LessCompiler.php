@@ -160,9 +160,9 @@ EOF;
         {
             $touchResult = touch($cssOutputFilePath, $sourceLastM );
         }
+
         
-        
-        if (! is_null($this->_logger) && $this->debug) {
+        if (! is_null($this->_logger) && $this->debug && isset($touchResult)) {
             $this->_logger->addDebug('Compilation done. ("touch()" success :'.( (int) $touchResult ));
         }
         

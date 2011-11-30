@@ -24,6 +24,9 @@ class LessServiceProvider implements ServiceProviderInterface
         if (isset($app['monolog'])) {
             $compiler->setLogger($app['monolog']);
         }
+        if (isset($app['less.enabled'])) {
+            $compiler->enabled = (boolean) $app['less.enabled'];
+        }
         if (isset($app['less.compress'])) {
             $compiler->compress = (boolean) $app['less.compress'];
         }

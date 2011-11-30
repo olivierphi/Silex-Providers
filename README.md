@@ -22,6 +22,7 @@ The LESS generation uses a small portion of the excellent PHP [Assetic](https://
 - **less.web_files_folder_path** (optional) : if your public assets are not in the same folder than your 'index.php' file, you can provide the public assets folder path here (it is automatically prepended to the LESS file path in the ```less``` Twig function).
 - **less.compress** (optional) : set it to ```true``` to compress the CSS files after LESS conversion.
 - **less.force_compilation** (optional) : set it to ```true``` to force the LESS-to-CSS compilation for each page load (the standard behaviour is to compile onl if the source LESS file is newer than the target CSS  file).
+- **less.enabled** (optional) : set it to ```false``` to disable the LESS files compilation (use it for your production server, when you have uploaded the previously generated CSS files from the LESS rules).
 
 #### Services
 
@@ -44,6 +45,7 @@ $app->register(new DrBenton\Silex\Provider\LessServiceProvider(), array(
     'less.tmp_folder'               =>  __DIR__.'/app/cache',
     'less.compress'                 =>  !$app['debug'],
     'less.force_compilation'        =>  $app['debug'],
+    'less.enabled'        					=>  true,
 ) );
 ```
 
@@ -57,4 +59,7 @@ This is useful if your LESS file are not in a public folder (for example, if you
 Example usage : ```<link rel="stylesheet" type="text/css" href="{{ less('/css/main.less') }}" />```.
 
 
+#### TODO
+
+Allows [lessphp](https://github.com/leafo/lessphp) use when its 3.0 version is released (this one will be compatible with the Javascript LESS implementation).
 
