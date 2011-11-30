@@ -35,10 +35,18 @@ The base idea for this Provider comes from [this](http://www.syndicatetheory.com
 Example usage:
 
 ```
-$app->register(new DrBenton\Silex\Provider\ZendDbProvider(), array(
-    'zend.class_path'                   => APP_ROOT.'/vendor/zend-framework/lib',
-    'zend.db.adapter'                   => 'pdo_mysql',
-) );
+// Let's add a user email in a newsletter table...
+$app['zend.db']->insert('newsletter_subscriptions', array(
+        'email' =>          $newEmail,
+        'creation_date' =>  new \Zend_Db_Expr('NOW()'),
+    )
+);
+// ...and retrieve it
+$select = $app['zend.db']->select()
+            ->from('newsletter_subscriptions', 'email')
+            ->where('email=?', newEmail);
+$insertedEmail = $select->query()->fetchColumn();
+// Zend_Db API is very powerful, and yet easy to use ! @see http://framework.zend.com/manual/fr/zend.db.adapter.html 
 ```
 
 #### Registering
