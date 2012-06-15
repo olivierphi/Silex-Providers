@@ -1,0 +1,11 @@
+{
+    "name": "dr-benton/silex-providers",
+    "require": {
+        "php": ">=5.3"
+    },
+    "autoload": {
+        "psr-0": {
+            "DrBenton": "./"
+        }
+    }
+}
