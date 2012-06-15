@@ -20,22 +20,12 @@ class ZendDbProvider implements ServiceProviderInterface
          */
         $app['zend.db'] = $app->share(function() use ($app) {
 
-            // Do we already have access to Zend Framework classes ?
-            if (! class_exists('Zend_Db', true)) {
-
-                if (! isset($app['zend.class_path'])) {
-                    throw new \InvalidArgumentException('Zend_Db class is not reachable, and no \'zend.class_path\' param has been found in the Silex Application!');
-                }
-
-                // Let's setup a ZF Environnment !
-                $app['autoloader']->registerPrefix('Zend_', $app['zend.class_path']);
-
-                // ZF needs include path fine tuning too
+            // Unfortunately, ZF is not "full PSR-0" and needs include path fine tuning :-/
+            if (false === strpos(get_include_path(), $app['zend.class_path'])) {
                 set_include_path(implode(PATH_SEPARATOR, array(
                     $app['zend.class_path'],
                     get_include_path(),
                 )));
-
             }
 
             $profilerEnabled = (isset($app['zend.db.profiler.enabled'])) ? (boolean) $app['zend.db.profiler.enabled'] : false ;
