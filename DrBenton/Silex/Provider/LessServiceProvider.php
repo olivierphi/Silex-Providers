@@ -70,6 +70,11 @@ class LessServiceProvider implements ServiceProviderInterface
         });
             
     }
+
+
+    public function boot(Application $app) {
+
+    }
     
     
 }

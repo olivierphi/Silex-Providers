@@ -109,4 +109,10 @@ class ZendDbProvider implements ServiceProviderInterface
         });
 
     }
+
+
+    public function boot(Application $app) {
+
+    }
+
 }

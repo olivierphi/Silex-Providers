@@ -53,4 +53,10 @@ class SimpleDataCacheProvider implements ServiceProviderInterface
         });
 
     }
+
+
+    public function boot(Application $app) {
+
+    }
+
 }
